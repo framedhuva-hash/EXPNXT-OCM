@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience NXT - Category Details</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="assets/logo.png" alt="Experience NXT" class="logo-img">
+        </div>
+        <ul class="nav-links">
+            <li>Home</li>
+            <li>DEX</li>
+            <li>SLA</li>
+            <li class="active">OCM</li>
+            <li>UXM</li>
+            <li>ESG</li>
+        </ul>
+        <div class="user-profile">
+            <span>Welcome Adarsh</span>
+            <div class="avatar"></div>
+        </div>
+    </nav>
+
+    <div class="main-container details-container">
+
+
+        <!-- Header -->
+        <div class="top-section">
+            <div class="card score-card">
+                <div class="score-content">
+                    <h2 class="score-title">OCM Score achieved 96% ! 🎉</h2>
+                    <p class="score-subtitle">🌟 Good Job! <strong>+4 points</strong>, surpassing previous year score of
+                        84%! 🚀</p>
+                    <div class="growth-label">+12 Point Growth</div>
+                </div>
+                <div class="score-visuals">
+                    <div class="gauge-wrapper">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="96, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" class="percentage">96%</text>
+                        </svg>
+                        <div class="gauge-ticks"><span>00</span><span>100</span></div>
+                    </div>
+                    <div class="illustration-wrapper">
+                        <img src="assets/illustration.png" alt="Working Person">
+                    </div>
+                </div>
+            </div>
+
+            <div class="change-mgmt-section">
+                <img src="assets/change_management.png" alt="Change Management" class="change-mgmt-img">
+            </div>
+        </div>
+
+        <!-- Back Button Row -->
+        <div class="back-row">
+            <a href="index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+
+        <!-- Row 1: Change History -->
+        <div class="details-row">
+            <div class="card history-card">
+                <div class="card-header-simple">
+                    <h3>Change history</h3>
+                    <div class="legend-group">
+                        <span class="legend-item"><span class="dot orange"></span> Monthly change volume</span>
+                        <span class="legend-item"><span class="dot blue"></span> Approval rate</span>
+                        <span class="legend-item"><span class="dot grey"></span> Average implementation duration</span>
+                    </div>
+                </div>
+                <div class="chart-container-large">
+                    <canvas id="historyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Metrics Split -->
+        <div class="details-row split-row">
+
+            <!-- SLA Stage Metrics -->
+            <div class="card metric-card">
+                <div class="card-header-simple">
+                    <h3>SLA Stage Metrics</h3>
+                    <p class="subtitle">Overview of average time spent per stage for current change record.</p>
+                </div>
+                <div class="metrics-content">
+                    <!-- Gauge -->
+                    <div class="gauge-section">
+                        <div class="gauge-container">
+                            <canvas id="slaGauge"></canvas>
+                            <div class="gauge-center-text">
+                                <span class="gauge-value">SLA Breached</span>
+                                <span class="gauge-sub">20 hours</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bar -->
+                    <div class="bar-section">
+                        <h4>Average Time per Stage</h4>
+                        <div class="chart-container-small">
+                            <canvas id="slaBar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Metrics -->
+            <div class="card metric-card">
+                <div class="card-header-simple">
+                    <h3>Risk Metrics</h3>
+                    <p class="subtitle">Assessment of risk levels and category-specific risk scores for this change.</p>
+                </div>
+                <div class="metrics-content">
+                    <!-- Gauge -->
+                    <div class="gauge-section">
+                        <div class="gauge-container">
+                            <canvas id="riskGauge"></canvas>
+                            <div class="gauge-center-text">
+                                <span class="gauge-value">High Risk</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bar -->
+                    <div class="bar-section">
+                        <div class="risk-legend">
+                            <span class="badge-risk actual">Actual Risk</span>
+                            <span class="badge-risk predicted">Predicted Risk</span>
+                        </div>
+                        <h4>Average Risk by Category</h4>
+                        <div class="chart-container-small">
+                            <canvas id="riskBar"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Separate script for details page logic -->
+    <script src="details-script.js"></script>
+</body>
+
+</html>

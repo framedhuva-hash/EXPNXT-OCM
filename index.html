@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience NXT - OCM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="assets/logo.png" alt="Experience NXT" class="logo-img">
+        </div>
+        <ul class="nav-links">
+            <li>Home</li>
+            <li>DEX</li>
+            <li>SLA</li>
+            <li class="active">OCM</li>
+            <li>UXM</li>
+            <li>ESG</li>
+        </ul>
+        <div class="user-profile">
+            <span>Welcome Adarsh</span>
+            <div class="avatar"></div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Top Row -->
+        <div class="top-section">
+            <!-- Score Card -->
+            <div class="card score-card">
+                <div class="score-content">
+                    <h2 class="score-title">OCM Score achieved 96% ! 🎉</h2>
+                    <p class="score-subtitle">🌟 Good Job! <strong>+4 points</strong>, surpassing previous year score of
+                        84%! 🚀</p>
+                    <div class="growth-label">+12 Point Growth</div>
+                </div>
+                <div class="score-visuals">
+                    <div class="gauge-wrapper">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="96, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" class="percentage">96%</text>
+                        </svg>
+                        <div class="gauge-ticks">
+                            <span>00</span>
+                            <span>100</span>
+                        </div>
+                    </div>
+                    <div class="illustration-wrapper">
+                        <img src="assets/illustration.png" alt="Working Person">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Management -->
+            <div class="change-mgmt-section">
+                <!-- <h3>CHANGE MANAGEMENT</h3> Title is in the image now? Looking at the upload, it HAS the text "CHANGE MANAGEMENT". So I should remove the h3 too. -->
+                <img src="assets/change_management.png" alt="Change Management" class="change-mgmt-img">
+            </div>
+        </div>
+
+        <!-- content-grid -->
+        <div class="content-grid">
+            <!-- Left Card -->
+            <div class="card categories-card">
+                <div class="card-header">
+                    <div class="header-title-group">
+                        <div>
+                            <h3>Top Categories</h3>
+                            <span class="subtitle">7.2k Total changes</span>
+                        </div>
+                        <div class="tooltip-container">
+                            <i class="fa-solid fa-circle-info info-icon"></i>
+                            <div class="tooltip-text">
+                                <span class="dot orange"></span> High (>5)<br>
+                                <span class="dot purple"></span> Low (≤5)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="header-icon"><i class="fa-solid fa-desktop"></i></div>
+                </div>
+                <div class="categories-list">
+                    <a href="category-details.html?category=Application Related issue" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Application Related issue</span>
+                            <span class="badge badge-high">10</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=End User computing" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>End User computing</span>
+                            <span class="badge badge-high">9</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=VPN Issue" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>VPN Issue</span>
+                            <span class="badge badge-high">8</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Logon speed" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Logon speed</span>
+                            <span class="badge badge-low">2</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Logon speed 2" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Logon speed</span>
+                            <span class="badge badge-low">1</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Logon speed 3" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Logon speed</span>
+                            <span class="badge badge-low">2</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <div class="card chart-card">
+                    <div class="chart-header-row">
+                        <h3>Changes over the time</h3>
+                        <div class="tooltip-container">
+                            <i class="fa-solid fa-circle-info info-icon" style="color: #4318FF; font-size: 16px;"></i>
+                            <span class="tooltip-text">Click on any bubble to view detailed insights.</span>
+                        </div>
+                    </div>
+                    <!-- Chart Canvas with Flip Structure -->
+                    <!-- <div class="chart-container">
+                    <canvas id="changesChart"></canvas>
+                </div> -->
+
+                    <div class="flip-chart-container">
+                        <div class="flip-card-inner" id="flipCardInner">
+                            <!-- Front: Chart -->
+                            <div class="flip-card-front">
+                                <div class="chart-container">
+                                    <canvas id="changesChart"></canvas>
+                                </div>
+                            </div>
+                            <!-- Back: Table -->
+                            <div class="flip-card-back">
+                                <div class="flip-header">
+                                    <h3>Change Details</h3>
+                                    <button id="flipBackBtn" class="flip-back-btn"><i
+                                            class="fa-solid fa-rotate-left"></i> Back to Chart</button>
+                                </div>
+                                <div class="table-responsive small-table">
+                                    <table class="details-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Change ID</th>
+                                                <th>Priority</th>
+                                                <th>Project/Category</th>
+                                                <th>State</th>
+                                                <th>SLA Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="flipTableBody">
+                                            <!-- Populated by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-legend">
+                        <span class="dot purple"></span> Breached
+                        <span class="dot green"></span> SLA Met
+                    </div>
+                </div>
+
+                <div class="card chart-card">
+                    <div class="chart-header-row">
+                        <h3>Location Impact Bubble View (Higher = Bigger Impact)</h3>
+                    </div>
+                    <div class="canvas-container">
+                        <canvas id="locationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="bottom-grid">
+            <!-- Projects with Change -->
+            <div class="card project-change-card">
+                <div class="chart-header-row">
+                    <h3>Projects with Change</h3>
+                    <a href="#">MORE</a>
+                </div>
+                <!-- Timeline Container -->
+                <div id="projectsTimeline" class="timeline-container">
+                    <!-- JS will populate this or we structure it here -->
+                    <!-- Grid background, Rows -->
+                </div>
+                <div class="timeline-legend">
+                    <div class="legend-item"><span class="ring-icon"></span> Change</div>
+                    <div class="legend-item"><span class="alert-icon"><i
+                                class="fa-solid fa-circle-exclamation"></i></span> Breached</div>
+                </div>
+            </div>
+
+            <!-- Priority Wise Change -->
+            <div class="card priority-card">
+                <div class="chart-header-row">
+                    <h3>Priority Wise Change</h3>
+                </div>
+                <div class="canvas-container donut-container">
+                    <canvas id="priorityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
