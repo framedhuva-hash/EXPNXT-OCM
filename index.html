@@ -182,17 +182,47 @@
                         </div>
                     </div>
                     <div class="chart-legend">
-                        <span class="dot purple"></span> Breached
+                        <span class="dot purple"></span> SLA Breached
                         <span class="dot green"></span> SLA Met
                     </div>
                 </div>
 
                 <div class="card chart-card">
                     <div class="chart-header-row">
-                        <h3>Location Impact Bubble View (Higher = Bigger Impact)</h3>
+                        <h3>Location Impact</h3>
                     </div>
-                    <div class="canvas-container">
-                        <canvas id="locationChart"></canvas>
+                    <div class="flip-chart-container" style="height: 250px;">
+                        <div class="flip-card-inner" id="locationFlipInner">
+                            <!-- Front: Chart -->
+                            <div class="flip-card-front">
+                                <div class="canvas-container" style="height: 100%;">
+                                    <canvas id="locationChart"></canvas>
+                                </div>
+                            </div>
+                            <!-- Back: Table -->
+                            <div class="flip-card-back">
+                                <div class="flip-header">
+                                    <h3>Impact Details</h3>
+                                    <button id="locationFlipBackBtn" class="flip-back-btn"><i
+                                            class="fa-solid fa-rotate-left"></i> Back</button>
+                                </div>
+                                <div class="table-responsive small-table">
+                                    <table class="details-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Location</th>
+                                                <th>Number of changes</th>
+                                                <th>Impact Score</th>
+                                                <th>Project/Category</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="locationFlipTableBody">
+                                            <!-- Populated by JS -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

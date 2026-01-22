@@ -307,8 +307,9 @@ body {
 }
 
 .info-icon {
-    color: var(--text-secondary);
-    font-size: 14px;
+    /* color: var(--text-secondary); */
+    color: #4318FF;
+    font-size: 16px;
     cursor: pointer;
 }
 
@@ -375,10 +376,17 @@ body {
     justify-content: space-between;
     align-items: center;
     font-size: 14px;
+    background-color: #fdfdfd;
     color: var(--text-primary);
     font-weight: 500;
     padding: 5px 10px;
+    border-radius: 15px;
     /* added padding for better hover target */
+}
+
+.cat-item:hover {
+    background-color: #f4f4ff;
+    /* color: white; */
 }
 
 /* Badges */

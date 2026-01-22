@@ -190,11 +190,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Flip Back Handler
+    // Flip Back Handler (Changes Chart)
     const flipBackBtn = document.getElementById('flipBackBtn');
     if (flipBackBtn) {
         flipBackBtn.addEventListener('click', function () {
             document.getElementById('flipCardInner').classList.remove('flipped');
+        });
+    }
+
+    // Flip Back Handler (Location Chart)
+    const locationFlipBackBtn = document.getElementById('locationFlipBackBtn');
+    if (locationFlipBackBtn) {
+        locationFlipBackBtn.addEventListener('click', function () {
+            const flipContainer = document.getElementById('locationFlipInner');
+            if (flipContainer) flipContainer.classList.remove('flipped');
         });
     }
 
@@ -252,13 +261,71 @@ document.addEventListener('DOMContentLoaded', function () {
                     max: 50,
                     title: {
                         display: true,
-                        text: 'Number of Incidents',
+                        text: 'Number of Changes',
                         color: '#A3AED0',
                         font: { size: 12, weight: 500 }
                     },
                     grid: {
                         borderDash: [5, 5],
                         color: '#E0E5F2'
+                    }
+                }
+            },
+            onClick: (e) => {
+                const points = locationChart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+                if (points.length) {
+                    const firstPoint = points[0];
+                    const datasetIndex = firstPoint.datasetIndex;
+                    const dataIndex = firstPoint.index;
+
+                    const pointData = locationChart.data.datasets[datasetIndex].data[dataIndex];
+
+                    // Determine Location Name
+                    const locationNames = ['Bangalore', 'Chennai', 'Hyderabad', 'Pune', 'Mumbai'];
+                    const locationName = locationNames[pointData.x - 1] || 'Unknown';
+                    const totalChanges = pointData.y;
+
+                    // Flip the Card
+                    const flipContainer = document.getElementById('locationFlipInner');
+                    if (flipContainer) flipContainer.classList.add('flipped');
+
+                    // Populate Data
+                    const tbody = document.getElementById('locationFlipTableBody');
+                    if (tbody) {
+                        tbody.innerHTML = '';
+
+                        const projects = ['Network Upgrade', 'Database Migration', 'App Deployment', 'Security Patch', 'Server Maintenance'];
+
+                        // Synthetic distribution: 3 rows
+                        const share1 = Math.floor(totalChanges * 0.5);
+                        const share2 = Math.floor(totalChanges * 0.3);
+                        const share3 = totalChanges - share1 - share2;
+
+                        const shares = [share1, share2, share3];
+
+                        shares.forEach((share, idx) => {
+                            let impactLabel = 'Low';
+                            let impactClass = 'pill-met';
+
+                            if (share > 10) {
+                                impactLabel = 'High';
+                                impactClass = 'pill-breached';
+                            } else if (share > 5) {
+                                impactLabel = 'Medium';
+                                impactClass = 'pill-risk';
+                            }
+
+                            const project = projects[(dataIndex + idx) % projects.length];
+
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${locationName}</td>
+                                <td>${share}</td>
+                                <td><span class="pill ${impactClass}">${impactLabel}</span></td>
+                                <td>${project}</td>
+                             `;
+                            tbody.appendChild(row);
+                        });
                     }
                 }
             },
