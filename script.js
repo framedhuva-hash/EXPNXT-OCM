@@ -207,6 +207,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Flip Back Handler (Priority Chart)
+    const priorityFlipBackBtn = document.getElementById('priorityFlipBackBtn');
+    if (priorityFlipBackBtn) {
+        priorityFlipBackBtn.addEventListener('click', function () {
+            const flipContainer = document.getElementById('priorityFlipInner');
+            if (flipContainer) flipContainer.classList.remove('flipped');
+        });
+    }
+
     // Chart 2: Location Impact
     const ctx2 = document.getElementById('locationChart').getContext('2d');
 
@@ -356,6 +365,62 @@ document.addEventListener('DOMContentLoaded', function () {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            onClick: (e, elements) => {
+                if (elements.length > 0) {
+                    const index = elements[0].index;
+                    const chart = e.chart; // Access chart instance from event
+
+                    // Flip the Card
+                    const flipContainer = document.getElementById('priorityFlipInner');
+                    if (flipContainer) flipContainer.classList.add('flipped');
+
+                    // Populate Data
+                    const tbody = document.getElementById('priorityFlipTableBody');
+                    if (tbody) {
+                        tbody.innerHTML = '';
+                        const priorities = ['P1', 'P2', 'P3', 'P4'];
+
+                        // Get Percentage for row count
+                        const percentage = chart.data.datasets[0].data[index];
+                        // Heuristic: 1 row for every ~4-5% to keep it reasonable, or as requested
+                        // User accepted "percentage / 3" in plan, but let's try /4 to avoid too many rows (28/3 = ~9 rows)
+                        // Actually let's do Math.max(3, Math.round(percentage / 4)) to ensure at least some rows.
+                        // Let's stick to a factor that looks good. 
+                        const rowsCount = Math.max(3, Math.round(percentage / 4));
+
+                        // Generate synthetic rows
+                        for (let i = 0; i < rowsCount; i++) {
+                            const row = document.createElement('tr');
+                            const id = `CHG${Math.floor(Math.random() * 90000) + 10000}`;
+                            const projects = ['Network', 'Database', 'Cloud Ops', 'Security', 'Frontend'];
+                            const project = projects[Math.floor(Math.random() * projects.length)];
+                            const descriptions = [
+                                'Database optimization',
+                                'Firewall rule update',
+                                'Server patch deployment',
+                                'Load balancer config',
+                                'User access review'
+                            ];
+                            const description = descriptions[Math.floor(Math.random() * descriptions.length)];
+                            const statuses = ['In Progress', 'Scheduled', 'Pending Approval', 'Completed'];
+                            const status = statuses[Math.floor(Math.random() * statuses.length)];
+
+                            let statusClass = 'pill-open';
+                            if (status === 'Completed') statusClass = 'pill-met';
+                            if (status === 'In Progress') statusClass = 'pill-progress';
+                            if (status === 'Scheduled') statusClass = 'pill-risk';
+
+                            row.innerHTML = `
+                                <td><a href="#" class="incident-link">${id}</a></td>
+                                <td>${project}</td>
+                                <td>${description}</td>
+                                <td><span class="pill ${statusClass}">${status}</span></td>
+                            `;
+                            tbody.appendChild(row);
+                        }
+                    }
+                }
+            },
             plugins: {
                 legend: {
                     display: false // Text is inside the pie slices in the image
@@ -407,11 +472,11 @@ function renderTimeline() {
 
     // Config: 0 = Jan start, 11 = Dec end
     const projects = [
-        { name: 'Project A', start: 1, changes: [1, 3, 7], breach: 8 }, // 1=Feb, 3=Apr, 7=Aug, 8=Sep
-        { name: 'Project B', start: 0.5, changes: [0.5, 3, 6], breach: 8.5 },
-        { name: 'Project C', start: 1, changes: [1, 3, 6], breach: 7.5 },
-        { name: 'Project D', start: 1, changes: [1, 2.5, 5], breach: 7 },
-        { name: 'Project E', start: 1, changes: [1, 4], breach: 5.5 }
+        { name: 'Application', start: 1, changes: [1, 3, 7], breach: 8 },
+        { name: 'Network', start: 0.5, changes: [0.5, 3, 6], breach: 8.5 },
+        { name: 'Database', start: 1, changes: [1, 3, 6], breach: 7.5 },
+        { name: 'Cloud ops', start: 1, changes: [1, 2.5, 5], breach: 7 },
+        { name: 'Security', start: 1, changes: [1, 4], breach: 5.5 }
     ];
 
     let html = '';
@@ -422,10 +487,6 @@ function renderTimeline() {
         const min = Math.min(proj.start, ...proj.changes);
         const max = proj.breach;
 
-        // Convert to percentage (12 months = 100%)
-        // 0 = 0%, 11 = 100% roughly. Let's say 12 units?
-        // Let's assume space is 0 to 11.
-
         const getLeft = (val) => (val / 11) * 100;
 
         const lineLeft = getLeft(min);
@@ -434,11 +495,12 @@ function renderTimeline() {
         // Generate Change Dots
         let dotsHtml = '';
         proj.changes.forEach(val => {
-            dotsHtml += `<div class="timeline-dot" style="left: ${getLeft(val)}%" title="Change"></div>`;
+            // Added data attributes and onclick for flip
+            dotsHtml += `<div class="timeline-dot" style="left: ${getLeft(val)}%" title="Change" onclick="handleTimelineClick('change', '${proj.name}')"></div>`;
         });
 
         // Generate Breach Dot
-        const breachHtml = `<div class="timeline-dot alert" style="left: ${getLeft(proj.breach)}%" title="Breached"><i class="fa-solid fa-circle-exclamation"></i></div>`;
+        const breachHtml = `<div class="timeline-dot alert" style="left: ${getLeft(proj.breach)}%" title="Breached" onclick="handleTimelineClick('breached', '${proj.name}')"><i class="fa-solid fa-circle-exclamation"></i></div>`;
 
         html += `
             <div class="timeline-row">
@@ -460,4 +522,141 @@ function renderTimeline() {
     axisHtml += '</div>';
 
     container.innerHTML = html + axisHtml;
+
+    // Flip Back Handler (Timeline Chart)
+    const timelineFlipBackBtn = document.getElementById('timelineFlipBackBtn');
+    if (timelineFlipBackBtn) {
+        timelineFlipBackBtn.addEventListener('click', function () {
+            const flipContainer = document.getElementById('timelineFlipInner');
+            if (flipContainer) flipContainer.classList.remove('flipped');
+        });
+    }
 }
+
+// Global function to handle Timeline Clicks
+window.handleTimelineClick = function (type, projectName) {
+    const flipContainer = document.getElementById('timelineFlipInner');
+    const tableHead = document.getElementById('timelineFlipHead');
+    const tableBody = document.getElementById('timelineFlipTableBody');
+    const title = document.getElementById('timelineFlipTitle');
+
+    if (!flipContainer || !tableHead || !tableBody) return;
+
+    // Flip the Card
+    flipContainer.classList.add('flipped');
+    tableBody.innerHTML = '';
+    title.innerText = type === 'breached' ? 'Breach Details' : 'Change Details';
+
+    const changeId = `CHG${Math.floor(Math.random() * 90000) + 10000}`;
+    const descriptions = ['Database Schema Update', 'Firewall Configuration', 'Application Deployment', 'Load Balancer Adjustment', 'Security Patch installation'];
+    const description = descriptions[Math.floor(Math.random() * descriptions.length)];
+
+    if (type === 'change') {
+        // Change ID, Project, Description, Start Date, End Date, Root Cause
+        tableHead.innerHTML = `
+            <tr>
+                <th>Change ID</th>
+                <th>Project</th>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Root Cause</th>
+            </tr>
+        `;
+
+        // Generate Dates
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(today.getDate() - Math.floor(Math.random() * 10));
+        const end = new Date(start);
+        end.setDate(start.getDate() + 2);
+
+        const startDateStr = start.toLocaleDateString();
+        const endDateStr = end.toLocaleDateString();
+
+        // Root Cause
+        const rootCauses = ['Firmware Update', 'Policy Change', 'Capacity Addition', 'Bug Fix', 'Routine Maintenance'];
+        const rootCause = rootCauses[Math.floor(Math.random() * rootCauses.length)];
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><a href="#" class="incident-link">${changeId}</a></td>
+            <td>${projectName}</td>
+            <td>${description}</td>
+            <td>${startDateStr}</td>
+            <td>${endDateStr}</td>
+            <td>${rootCause}</td>
+        `;
+        tableBody.appendChild(row);
+
+    } else if (type === 'breached') {
+        // Change ID, Project, Description, Start Date, End Date, Breached Duration
+        tableHead.innerHTML = `
+            <tr>
+                <th>Change ID</th>
+                <th>Project</th>
+                <th>Description</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Duration</th>
+            </tr>
+        `;
+
+        // Generate Dates
+        const today = new Date();
+        const start = new Date(today);
+        start.setDate(today.getDate() - Math.floor(Math.random() * 10)); // Start in last 10 days
+        const end = new Date(start);
+        end.setDate(start.getDate() + 2); // End 2 days later
+
+        const startDateStr = start.toLocaleDateString();
+        const endDateStr = end.toLocaleDateString();
+        const duration = Math.floor(Math.random() * 5) + 2 + ' hrs'; // Random duration 2-7 hrs
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><a href="#" class="incident-link">${changeId}</a></td>
+            <td>${projectName}</td>
+            <td>${description}</td>
+            <td>${startDateStr}</td>
+            <td>${endDateStr}</td>
+            <td><span class="pill pill-breached">${duration}</span></td>
+        `;
+        tableBody.appendChild(row);
+    }
+};
+
+// Change Management Flip Logic
+window.handleChangeMgmtFlip = function () {
+    const flipContainer = document.getElementById('changeMgmtFlipInner');
+    const contentBody = document.getElementById('changeMgmtActionsBody');
+
+    if (flipContainer && contentBody) {
+        flipContainer.classList.add('flipped');
+
+        // Populate Content
+        contentBody.innerHTML = `
+            <div style="margin-bottom: 15px;">
+                <h4 style="margin: 0 0 5px 0; color: #d32f2f;">Critical: High Latency in APAC Region</h4>
+                <p style="margin: 0; font-size: 13px; color: #555;">Recurring issue causing 15% slow-down in transaction processing.</p>
+            </div>
+            <h5 style="margin: 10px 0 5px 0; color: #4318FF;">Recommended Actions:</h5>
+            <ul style="padding-left: 20px; margin: 0; font-size: 13px;">
+                <li style="margin-bottom: 5px;">Reroute traffic via secondary gateway node.</li>
+                <li style="margin-bottom: 5px;">Investigate ISP peering congestion at Singapore hub.</li>
+                <li style="margin-bottom: 5px;">Scale up load balancer capacity by 20%.</li>
+            </ul>
+        `;
+    }
+}
+
+// Back Button for Change Mgmt
+document.addEventListener('DOMContentLoaded', () => {
+    const backBtn = document.getElementById('changeMgmtFlipBackBtn');
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            const flipContainer = document.getElementById('changeMgmtFlipInner');
+            if (flipContainer) flipContainer.classList.remove('flipped');
+        });
+    }
+});

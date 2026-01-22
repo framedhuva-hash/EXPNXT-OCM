@@ -68,7 +68,31 @@
             <!-- Change Management -->
             <div class="change-mgmt-section">
                 <!-- <h3>CHANGE MANAGEMENT</h3> Title is in the image now? Looking at the upload, it HAS the text "CHANGE MANAGEMENT". So I should remove the h3 too. -->
-                <img src="assets/change_management.png" alt="Change Management" class="change-mgmt-img">
+                <div class="flip-chart-container" style="height: 300px;">
+                    <div class="flip-card-inner" id="changeMgmtFlipInner">
+                        <!-- Front -->
+                        <div class="flip-card-front"
+                            style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent;">
+                            <img src="assets/change_management.png" alt="Change Management" class="change-mgmt-img">
+                            <div class="critical-impact-card" onclick="handleChangeMgmtFlip()" style="cursor: pointer;">
+                                <a href="javascript:void(0)" class="critical-impact-link"><i
+                                        class="fa-solid fa-clipboard-check"></i> OverAll critical impact</a>
+                            </div>
+                        </div>
+                        <!-- Back -->
+                        <div class="flip-card-back" style="background: white; color: #333;">
+                            <div class="flip-header">
+                                <h3>Critical Actions</h3>
+                                <button id="changeMgmtFlipBackBtn" class="flip-back-btn"><i
+                                        class="fa-solid fa-rotate-left"></i> Back</button>
+                            </div>
+                            <div class="impact-actions-body" id="changeMgmtActionsBody"
+                                style="padding: 15px; text-align: left;">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -126,6 +150,43 @@
                     <a href="category-details.html?category=Logon speed 3" class="cat-item-link">
                         <div class="cat-item">
                             <span>Logon speed</span>
+                            <span class="badge badge-low">2</span>
+                        </div>
+                    </a>
+                    <!-- New Categories -->
+                    <a href="category-details.html?category=Network Latency" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Network Latency</span>
+                            <span class="badge badge-high">7</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Access Control" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Access Control</span>
+                            <span class="badge badge-low">5</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Software Installation" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Software Installation</span>
+                            <span class="badge badge-low">4</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Server Performance" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Server Performance</span>
+                            <span class="badge badge-high">6</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Data Backup" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Data Backup</span>
+                            <span class="badge badge-low">3</span>
+                        </div>
+                    </a>
+                    <a href="category-details.html?category=Email Sync Issue" class="cat-item-link">
+                        <div class="cat-item">
+                            <span>Email Sync Issue</span>
                             <span class="badge badge-low">2</span>
                         </div>
                     </a>
@@ -190,6 +251,11 @@
                 <div class="card chart-card">
                     <div class="chart-header-row">
                         <h3>Location Impact</h3>
+                        <div class="tooltip-container">
+                            <i class="fa-solid fa-circle-info info-icon" style="color: #4318FF; font-size: 16px;"></i>
+                            <span class="tooltip-text">Click on any bubble to view detailed location impact
+                                analysis.</span>
+                        </div>
                     </div>
                     <div class="flip-chart-container" style="height: 250px;">
                         <div class="flip-card-inner" id="locationFlipInner">
@@ -204,7 +270,7 @@
                                 <div class="flip-header">
                                     <h3>Impact Details</h3>
                                     <button id="locationFlipBackBtn" class="flip-back-btn"><i
-                                            class="fa-solid fa-rotate-left"></i> Back</button>
+                                            class="fa-solid fa-rotate-left"></i> Back to chart</button>
                                 </div>
                                 <div class="table-responsive small-table">
                                     <table class="details-table">
@@ -234,17 +300,43 @@
             <div class="card project-change-card">
                 <div class="chart-header-row">
                     <h3>Projects with Change</h3>
-                    <a href="#">MORE</a>
+                    <div class="tooltip-container">
+                        <i class="fa-solid fa-circle-info info-icon" style="color: #4318FF; font-size: 16px;"></i>
+                        <span class="tooltip-text">Click on any circle in the timeline to view change details.</span>
+                    </div>
                 </div>
-                <!-- Timeline Container -->
-                <div id="projectsTimeline" class="timeline-container">
-                    <!-- JS will populate this or we structure it here -->
-                    <!-- Grid background, Rows -->
-                </div>
-                <div class="timeline-legend">
-                    <div class="legend-item"><span class="ring-icon"></span> Change</div>
-                    <div class="legend-item"><span class="alert-icon"><i
-                                class="fa-solid fa-circle-exclamation"></i></span> Breached</div>
+                <div class="flip-chart-container" style="height: auto; min-height: 250px;">
+                    <div class="flip-card-inner" id="timelineFlipInner">
+                        <!-- Front: Timeline -->
+                        <div class="flip-card-front" style="position: relative; display: block;">
+                            <div id="projectsTimeline" class="timeline-container">
+                                <!-- JS populated -->
+                            </div>
+                            <div class="timeline-legend">
+                                <div class="legend-item"><span class="ring-icon"></span> Change</div>
+                                <div class="legend-item"><span class="alert-icon"><i
+                                            class="fa-solid fa-circle-exclamation"></i></span> Breached</div>
+                            </div>
+                        </div>
+                        <!-- Back: Table -->
+                        <div class="flip-card-back">
+                            <div class="flip-header">
+                                <h3 id="timelineFlipTitle">Change Details</h3>
+                                <button id="timelineFlipBackBtn" class="flip-back-btn"><i
+                                        class="fa-solid fa-rotate-left"></i> Back to chart</button>
+                            </div>
+                            <div class="table-responsive small-table">
+                                <table class="details-table">
+                                    <thead id="timelineFlipHead">
+                                        <!-- Dynamic Headers -->
+                                    </thead>
+                                    <tbody id="timelineFlipTableBody">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -252,9 +344,43 @@
             <div class="card priority-card">
                 <div class="chart-header-row">
                     <h3>Priority Wise Change</h3>
+                    <div class="tooltip-container">
+                        <i class="fa-solid fa-circle-info info-icon" style="color: #4318FF; font-size: 16px;"></i>
+                        <span class="tooltip-text">Click on any slice to view detailed priority changes.</span>
+                    </div>
                 </div>
-                <div class="canvas-container donut-container">
-                    <canvas id="priorityChart"></canvas>
+                <div class="flip-chart-container">
+                    <div class="flip-card-inner" id="priorityFlipInner">
+                        <!-- Front: Chart -->
+                        <div class="flip-card-front">
+                            <div class="canvas-container donut-container">
+                                <canvas id="priorityChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Back: Table -->
+                        <div class="flip-card-back">
+                            <div class="flip-header">
+                                <h3>Priority Details</h3>
+                                <button id="priorityFlipBackBtn" class="flip-back-btn"><i
+                                        class="fa-solid fa-rotate-left"></i> Back to chart</button>
+                            </div>
+                            <div class="table-responsive small-table">
+                                <table class="details-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Change ID</th>
+                                            <th>Project</th>
+                                            <th>Description</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="priorityFlipTableBody">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
