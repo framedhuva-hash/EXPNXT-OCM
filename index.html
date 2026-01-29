@@ -27,9 +27,17 @@
             <li>UXM</li>
             <li>ESG</li>
         </ul>
-        <div class="user-profile">
-            <span>Welcome Adarsh</span>
-            <div class="avatar"></div>
+        <div class="navbar-right">
+            <div class="data-timestamp-container">
+                <span id="dataTimestamp" class="data-timestamp">Data as of: --</span>
+                <button id="refreshDataBtn" class="refresh-data-btn" title="Refresh Data">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+            </div>
+            <div class="user-profile">
+                <span>Welcome Adarsh</span>
+                <div class="avatar"></div>
+            </div>
         </div>
     </nav>
 
@@ -74,9 +82,15 @@
                         <div class="flip-card-front"
                             style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent;">
                             <img src="assets/change_management.png" alt="Change Management" class="change-mgmt-img">
-                            <div class="critical-impact-card" onclick="handleChangeMgmtFlip()" style="cursor: pointer;">
-                                <a href="javascript:void(0)" class="critical-impact-link"><i
-                                        class="fa-solid fa-clipboard-check"></i> OverAll critical impact</a>
+                            <div class="critical-impact-card notification-style" onclick="handleChangeMgmtFlip()"
+                                style="cursor: pointer;">
+                                <div class="notification-icon">
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                    <span class="notification-pulse"></span>
+                                </div>
+                                <div class="notification-text">
+                                    <span class="count" id="criticalImpactCount"></span> Critical impacts found
+                                </div>
                             </div>
                         </div>
                         <!-- Back -->
@@ -117,79 +131,7 @@
                     <div class="header-icon"><i class="fa-solid fa-desktop"></i></div>
                 </div>
                 <div class="categories-list">
-                    <a href="category-details.html?category=Application Related issue" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Application Related issue</span>
-                            <span class="badge badge-high">10</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=End User computing" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>End User computing</span>
-                            <span class="badge badge-high">9</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=VPN Issue" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>VPN Issue</span>
-                            <span class="badge badge-high">8</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Logon speed" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Logon speed</span>
-                            <span class="badge badge-low">2</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Logon speed 2" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Logon speed</span>
-                            <span class="badge badge-low">1</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Logon speed 3" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Logon speed</span>
-                            <span class="badge badge-low">2</span>
-                        </div>
-                    </a>
-                    <!-- New Categories -->
-                    <a href="category-details.html?category=Network Latency" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Network Latency</span>
-                            <span class="badge badge-high">7</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Access Control" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Access Control</span>
-                            <span class="badge badge-low">5</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Software Installation" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Software Installation</span>
-                            <span class="badge badge-low">4</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Server Performance" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Server Performance</span>
-                            <span class="badge badge-high">6</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Data Backup" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Data Backup</span>
-                            <span class="badge badge-low">3</span>
-                        </div>
-                    </a>
-                    <a href="category-details.html?category=Email Sync Issue" class="cat-item-link">
-                        <div class="cat-item">
-                            <span>Email Sync Issue</span>
-                            <span class="badge badge-low">2</span>
-                        </div>
-                    </a>
+                    <!-- Populated by JS -->
                 </div>
             </div>
 
@@ -385,6 +327,308 @@
             </div>
         </div>
     </div>
+    <!-- Change Form Modal Overlay -->
+    <div id="changeFormModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">Change Request Details</h2>
+                <button class="modal-close-btn" id="modalCloseBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Edit Mode Toggle -->
+                <div class="edit-mode-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="editModeToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Edit Mode</span>
+                </div>
+
+                <!-- Priority Highlight Section (shown when opened from Priority card) -->
+                <div id="priorityHighlightSection" class="priority-highlight-section" style="display: none;">
+                    <div class="priority-highlight-header">
+                        <span class="priority-label">Priority</span>
+                        <span id="priorityBadge" class="priority-badge"></span>
+                    </div>
+                    <div class="priority-highlight-content">
+                        <p id="priorityDescription" class="priority-description"></p>
+                        <div class="priority-details-row">
+                            <div class="priority-detail-item">
+                                <label><i class="fa-solid fa-bolt"></i> Impact</label>
+                                <span id="modalImpactBadge" class="priority-detail-badge"></span>
+                            </div>
+                            <div class="priority-detail-item">
+                                <label><i class="fa-solid fa-shield-halved"></i> Risk</label>
+                                <span id="modalRiskBadge" class="priority-detail-badge"></span>
+                            </div>
+                            <div class="priority-detail-item">
+                                <label><i class="fa-solid fa-tasks"></i> State</label>
+                                <span id="modalStateBadge" class="priority-detail-badge"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="priority-sla-neutral">
+                        <span class="sla-neutral-label">SLA Status:</span>
+                        <span id="slaNeutralValue" class="sla-neutral-value"></span>
+                    </div>
+                </div>
+
+                <!-- SLA Breach Insight Section (shown when SLA breached) -->
+                <div id="slaBreachSection" class="sla-breach-section" style="display: none;">
+                    <div class="sla-breach-header">
+                        <div class="sla-breach-title">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>SLA Breach Alert</span>
+                        </div>
+                        <span class="sla-status-badge breached">
+                            <i class="fa-solid fa-clock-rotate-left"></i> SLA Breached
+                        </span>
+                    </div>
+
+                    <div class="sla-breach-content">
+                        <!-- Breach Reason -->
+                        <div class="breach-detail-row">
+                            <div class="breach-detail-item full-width">
+                                <label><i class="fa-solid fa-circle-question"></i> Breach Reason</label>
+                                <p id="breachReason" class="breach-reason-text"></p>
+                            </div>
+                        </div>
+
+                        <!-- Breach Duration -->
+                        <div class="breach-detail-row">
+                            <div class="breach-detail-item">
+                                <label><i class="fa-solid fa-bullseye"></i> SLA Target</label>
+                                <span id="slaTarget" class="breach-value"></span>
+                            </div>
+                            <div class="breach-detail-item">
+                                <label><i class="fa-solid fa-stopwatch"></i> Actual Time</label>
+                                <span id="actualTime" class="breach-value"></span>
+                            </div>
+                            <div class="breach-detail-item exceeded">
+                                <label><i class="fa-solid fa-arrow-up"></i> Exceeded By</label>
+                                <span id="exceededBy" class="breach-value exceeded-value"></span>
+                            </div>
+                        </div>
+
+                        <!-- Impact and Risk -->
+                        <div class="breach-detail-row">
+                            <div class="breach-detail-item">
+                                <label><i class="fa-solid fa-bolt"></i> Business Impact</label>
+                                <div class="breach-impact-info">
+                                    <span id="breachImpactBadge" class="breach-badge impact-high"></span>
+                                    <span id="breachImpactDesc" class="breach-desc-text"></span>
+                                </div>
+                            </div>
+                            <div class="breach-detail-item">
+                                <label><i class="fa-solid fa-shield-halved"></i> Risk Level</label>
+                                <div class="breach-impact-info">
+                                    <span id="breachRiskBadge" class="breach-badge risk-high"></span>
+                                    <span id="breachRiskDesc" class="breach-desc-text"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Timeline -->
+                        <div class="breach-timeline-section">
+                            <label><i class="fa-solid fa-timeline"></i> Delay Timeline</label>
+                            <div class="breach-mini-timeline" id="breachMiniTimeline">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sla-breach-footer">
+                        <div class="tooltip-container">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span class="tooltip-text">SLA breach is calculated based on the difference between target
+                                completion time and actual completion time as per service level agreements.</span>
+                        </div>
+                        <span class="breach-calc-note">Hover for SLA calculation info</span>
+                    </div>
+                </div>
+
+                <!-- SLA Met Section (shown when SLA not breached) -->
+                <div id="slaMetSection" class="sla-met-section" style="display: none;">
+                    <div class="sla-met-content">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <div class="sla-met-info">
+                            <span class="sla-status-badge met">SLA Met</span>
+                            <span id="slaMetDetails" class="sla-met-details"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Section -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fa-solid fa-plus-circle"></i> Create</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Change Number</label>
+                            <input type="text" id="changeNumber" class="form-input" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Change Type</label>
+                            <input type="text" id="changeType" class="form-input" readonly>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Short Description</label>
+                            <input type="text" id="shortDescription" class="form-input" readonly>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Description</label>
+                            <textarea id="description" class="form-textarea" rows="3" readonly></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Requested By</label>
+                            <input type="text" id="requestedBy" class="form-input" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assess Section -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fa-solid fa-chart-line"></i> Assess</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Impact</label>
+                            <input type="text" id="impact" class="form-input" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Risk</label>
+                            <input type="text" id="risk" class="form-input" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plan Section -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fa-solid fa-calendar-days"></i> Plan</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Planned Start</label>
+                            <input type="text" id="plannedStart" class="form-input" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Planned End</label>
+                            <input type="text" id="plannedEnd" class="form-input" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Approve Section -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fa-solid fa-check-circle"></i> Approve</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Approver</label>
+                            <input type="text" id="approver" class="form-input" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Approval Status</label>
+                            <input type="text" id="approvalStatus" class="form-input" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Implement & Close Section -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fa-solid fa-flag-checkered"></i> Implement & Close</h3>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Implementation Plan</label>
+                            <textarea id="implementationPlan" class="form-textarea" rows="3" readonly></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Backout Plan</label>
+                            <textarea id="backoutPlan" class="form-textarea" rows="3" readonly></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Close Code</label>
+                            <input type="text" id="closeCode" class="form-input" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Drill-Down Modal Overlay -->
+    <div id="changeDrillDownModal" class="modal-overlay">
+        <div class="modal-container drilldown-modal">
+            <!-- Sticky Header -->
+            <div class="modal-header drilldown-header">
+                <div class="drilldown-header-content">
+                    <h2 class="modal-title">
+                        <i class="fa-solid fa-map-marker-alt"></i>
+                        <span id="drilldownLocationName">Location</span>
+                    </h2>
+                    <span class="drilldown-count" id="drilldownTotalCount">0 Changes</span>
+                </div>
+                <button class="modal-close-btn" id="drilldownCloseBtn">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Controls Bar -->
+            <div class="drilldown-controls">
+                <div class="view-toggle">
+                    <button class="view-btn active" id="tableViewBtn" title="Table View">
+                        <i class="fa-solid fa-table-list"></i>
+                    </button>
+                    <button class="view-btn" id="cardViewBtn" title="Card View">
+                        <i class="fa-solid fa-grip"></i>
+                    </button>
+                </div>
+                <div class="filter-controls">
+                    <select id="slaFilter" class="filter-select">
+                        <option value="all">All SLA</option>
+                        <option value="met">SLA Met</option>
+                        <option value="breached">SLA Breached</option>
+                    </select>
+                    <select id="sortBy" class="filter-select">
+                        <option value="default">Sort By</option>
+                        <option value="priority">Priority</option>
+                        <option value="risk">Risk</option>
+                        <option value="sla">SLA Status</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body drilldown-body">
+                <!-- Table View -->
+                <div id="drilldownTableView" class="drilldown-view active">
+                    <table class="drilldown-table">
+                        <thead>
+                            <tr>
+                                <th>Change ID</th>
+                                <th>Description</th>
+                                <th>State</th>
+                                <th>Risk</th>
+                                <th>Impact</th>
+                                <th>Priority</th>
+                                <th>SLA Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="drilldownTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Card View -->
+                <div id="drilldownCardView" class="drilldown-view">
+                    <div class="drilldown-cards-grid" id="drilldownCardsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data-store.js"></script>
     <script src="script.js"></script>
 </body>
 
